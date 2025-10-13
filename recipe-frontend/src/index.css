@@ -1,0 +1,51 @@
+@import "tailwindcss";
+/* src/index.css */
+
+
+/* Remove the duplicate keyframes since they're now in tailwind.config.js */
+/* Keep only the custom utilities and scrollbar styles */
+
+/* Enhanced scrollbar */
+.enhanced-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.enhanced-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.enhanced-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #8b5cf6, #ec4899);
+  border-radius: 10px;
+}
+
+.enhanced-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #7c3aed, #db2777);
+}
+
+/* Glass morphism utility */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom selection */
+::selection {
+  background: rgba(168, 85, 247, 0.3);
+  color: white;
+}
