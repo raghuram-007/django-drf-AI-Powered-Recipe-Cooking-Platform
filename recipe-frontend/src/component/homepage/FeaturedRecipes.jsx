@@ -1,5 +1,6 @@
 // src/component/homepage/FeaturedRecipes.jsx
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const FeaturedRecipes = ({ recipes }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -106,11 +107,12 @@ const FeaturedRecipes = ({ recipes }) => {
                               </p>
                             </div>
                           </div>
-                          
+                        <Link to={`/recipe/${recipe.id}`}>
                           {/* View Recipe Button */}
                           <button className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap">
                             View Recipe
                           </button>
+                          </Link>
                         </div>
                       </div>
                     </div>

@@ -43,10 +43,10 @@ function App() {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/recipe" element={<RecipeList />} />
-          <Route path="/recipe/:id" element={<RecipeDetail />} />
+          <Route path="/recipe/:id" element={<RequireAuth><RecipeDetail /></RequireAuth>} />
           <Route path="/add-recipe" element={<AddRecipe />} />
           <Route path="/edit-recipe/:id" element={<EditRecipe />} />
-          <Route path="/category/:categoryId" element={<CategoryRecipie />} />
+          <Route path="/category/:categoryId" element={ <RequireAuth><CategoryRecipie /></RequireAuth>} />
           <Route path="/feed" element={<Feed />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/discover" element={<DiscoverRecipes/>}/>

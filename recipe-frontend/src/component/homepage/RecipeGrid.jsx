@@ -1,6 +1,6 @@
 // src/component/homepage/RecipeGrid.jsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const RecipeGrid = ({ recipes, title = "All Recipes" }) => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const RecipeGrid = ({ recipes, title = "All Recipes" }) => {
             Explore our complete collection of delicious recipes
           </p>
         </div>
-
+<Link to="/recipe" >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {displayedRecipes.map((recipe) => (
             <div
@@ -73,7 +73,7 @@ const RecipeGrid = ({ recipes, title = "All Recipes" }) => {
             </div>
           ))}
         </div>
-
+</Link>
         {/* Load More Button */}
         {recipes.length > 5 && (
           <div className="flex justify-center mt-12">
