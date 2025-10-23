@@ -19,11 +19,15 @@ from rest_framework.decorators import api_view, permission_classes
 import json
 import re
 from .utils import send_new_recipe_email
+from django.http import JsonResponse
 
 
 
 
 genai.configure(api_key=settings.GEMINI_API_KEY)
+
+def home(request):
+    return JsonResponse({"message": "API is running"})
     
     
 @api_view(['POST'])
