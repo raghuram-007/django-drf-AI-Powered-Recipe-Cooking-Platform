@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth', // matches your backend
+  baseURL: `${process.env.REACT_APP_API_URL}/api/auth`, // matches your backend
   // optional: timeout: 10000,
 });
 
