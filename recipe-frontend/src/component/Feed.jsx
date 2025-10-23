@@ -9,7 +9,7 @@ const Feed = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const API_BASE = 'http://127.0.0.1:8000'; // Inline API base URL
+  const API_BASE = 'https://django-drf-ai-powered-recipe-cooking.onrender.com'; // Inline API base URL
 
   useEffect(() => {
     fetchFeed();

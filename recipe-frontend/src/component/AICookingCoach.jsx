@@ -13,7 +13,7 @@ const AICookingCoach = ({ recipe }) => {
     try {
       const token = localStorage.getItem('access');
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/auth/ai/cooking-coach/',
+        'https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/ai/cooking-coach/',
         {
           question: question,
           recipe_context: recipe?.title || '',

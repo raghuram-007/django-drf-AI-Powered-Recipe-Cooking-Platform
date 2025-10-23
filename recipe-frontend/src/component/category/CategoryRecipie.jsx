@@ -16,7 +16,7 @@ const CategoryRecipes = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://127.0.0.1:8000/api/auth/categories/${categoryId}/recipes/`
+          `https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/categories/${categoryId}/recipes/`
         );
         setRecipes(response.data);
       } catch (err) {
@@ -101,7 +101,7 @@ const CategoryRecipes = () => {
                       src={
                         recipe.image.startsWith("http")
                           ? recipe.image
-                          : `http://localhost:8000${recipe.image}`
+                          : `https://django-drf-ai-powered-recipe-cooking.onrender.com${recipe.image}`
                       }
                       alt={recipe.title}
                       className="w-full h-52 object-cover transition-transform duration-700 group-hover:scale-110"

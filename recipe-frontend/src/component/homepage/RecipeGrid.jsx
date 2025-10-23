@@ -30,7 +30,7 @@ const RecipeGrid = ({ recipes, title = "All Recipes" }) => {
             >
               <div className="relative overflow-hidden">
                 <img
-                  src={recipe.image?.startsWith('http') ? recipe.image : `http://127.0.0.1:8000${recipe.image}`}
+                  src={recipe.image?.startsWith('http') ? recipe.image : `https://django-drf-ai-powered-recipe-cooking.onrender.com${recipe.image}`}
                   alt={recipe.title}
                   className="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {

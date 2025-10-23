@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios'; // Using axios directly
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE = "http://127.0.0.1:8000"; // Inline base URL
+const API_BASE = "https://django-drf-ai-powered-recipe-cooking.onrender.com"; // Inline base URL
 
 const FeedView = () => {
   const [recipes, setRecipes] = useState([]);

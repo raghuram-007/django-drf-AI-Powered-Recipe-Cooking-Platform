@@ -36,7 +36,7 @@ const CategoryBrowse = ({ categories }) => {
                     src={
                       cat.cat_image.startsWith("http")
                         ? cat.cat_image
-                        : `http://localhost:8000${cat.cat_image}`
+                        : `https://django-drf-ai-powered-recipe-cooking.onrender.com${cat.cat_image}`
                     }
                     alt={cat.name}
                     className="relative w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"

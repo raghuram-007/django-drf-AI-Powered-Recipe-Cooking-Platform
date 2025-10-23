@@ -19,7 +19,7 @@ const Notifications = () => {
   const fetchNotifications = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/auth/notifications/`,
+        `https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/notifications/`,
         config
       );
       setNotifications(response.data);
@@ -33,7 +33,7 @@ const Notifications = () => {
   const markAsRead = async (shareId) => {
     try {
       await axios.patch(
-        `http://localhost:8000/api/auth/notifications/${shareId}/read/`,
+        `https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/notifications/${shareId}/read/`,
         {},
         config
       );

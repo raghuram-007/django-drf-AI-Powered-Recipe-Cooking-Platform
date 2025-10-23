@@ -17,7 +17,7 @@ const DiscoverRecipes = () => {
     try {
       const token = localStorage.getItem('access');
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/auth/ai/trending-recipes/',
+        'https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/ai/trending-recipes/',
         filters,
         {
           headers: {
@@ -44,7 +44,7 @@ const DiscoverRecipes = () => {
       
       // Call the AI recipe guide API
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/auth/ai/recipe-guide/',
+        'https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/ai/recipe-guide/',
         {
           recipe_title: recipe.title,
           recipe_instructions: recipe.description

@@ -23,7 +23,7 @@ const ShareRecipe = ({ recipeId, recipeTitle, recipeImage, authorId }) => {
     setLoadingFollowers(true);
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/auth/followers/`,
+        `https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/followers/`,
         config
       );
       setFollowers(response.data);
@@ -56,7 +56,7 @@ const ShareRecipe = ({ recipeId, recipeTitle, recipeImage, authorId }) => {
     setSharing(true);
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/auth/recipes/${recipeId}/direct_share/`,
+        `https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/recipes/${recipeId}/direct_share/`,
         {
           receiver_ids: selectedFollowers,
           message: shareMessage

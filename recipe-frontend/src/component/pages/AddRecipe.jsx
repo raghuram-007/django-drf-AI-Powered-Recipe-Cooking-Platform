@@ -37,7 +37,7 @@ const AddRecipe = () => {
   // Fetch categories from backend (EXISTING - UNCHANGED)
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/auth/categories/")
+      .get("https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/categories/")
       .then((res) => setCategoriesList(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -53,7 +53,7 @@ const AddRecipe = () => {
     try {
       const token = localStorage.getItem("access");
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/auth/ai/generate-structured-recipe/",
+        "https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/ai/generate-structured-recipe/",
         { description: aiDescription },
         {
           headers: {
@@ -151,7 +151,7 @@ const AddRecipe = () => {
 
     try {
       await axios.post(
-        "http://127.0.0.1:8000/api/auth/recipes/",
+        "https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/recipes/",
         data,
         {
           headers: {

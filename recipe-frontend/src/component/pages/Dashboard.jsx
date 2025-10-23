@@ -12,7 +12,7 @@ const SharedRecipesView = () => {
   const [markingRead, setMarkingRead] = useState(null);
   const navigate = useNavigate();
 
-  const API_BASE = "http://127.0.0.1:8000";
+  const API_BASE = "https://django-drf-ai-powered-recipe-cooking.onrender.com";
 
   const token = localStorage.getItem("access");
   const config = {

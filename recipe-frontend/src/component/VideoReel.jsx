@@ -16,7 +16,7 @@ const VideoReel = ({ recipe, isActive, onLike, onComment, onShare }) => {
 
   const videoUrl = recipe.video?.startsWith('http') 
       ? recipe.video 
-      : `http://localhost:8000${recipe.video}`;
+      : `https://django-drf-ai-powered-recipe-cooking.onrender.com${recipe.video}`;
 
   useEffect(() => {
     if (videoRef.current) {

@@ -13,7 +13,7 @@ const Homepage = () => {
 
   // Fetch recipes and featured in one call
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/auth/recipes/')
+    axios.get('https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/recipes/')
       .then(res => {
         let recipes = [];
         // Handle paginated or plain array
@@ -31,7 +31,7 @@ const Homepage = () => {
 
   // Fetch categories
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/auth/categories/')
+    axios.get('https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/categories/')
       .then(res => setCategories(res.data))
       .catch(err => setError('Failed to load categories: ' + err.message));
   }, []);

@@ -31,7 +31,7 @@ const SignupForm = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/auth/signup/', {
+      const response = await axios.post('https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/signup/', {
         full_name: signupData.fullName,
         email: signupData.email,
         password: signupData.password
