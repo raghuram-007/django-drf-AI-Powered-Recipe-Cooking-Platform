@@ -266,10 +266,9 @@ WSGI_APPLICATION = 'recipe_project.wsgi.application'
 # -------------------------------
 DATABASES = {
     'default': dj_database_url.config(
-        default=f"postgres://postgres:rootp@localhost:5432/recipe_db"
+        default=f"postgres://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{os.environ.get('DB_NAME')}"
     )
 }
-
 # -------------------------------
 # Password validation
 # -------------------------------
