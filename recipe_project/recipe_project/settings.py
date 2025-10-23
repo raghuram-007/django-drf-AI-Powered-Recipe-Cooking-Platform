@@ -193,7 +193,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -------------------------------
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = False
-ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS", "https://django-drf-ai-powered-recipe-cooking.onrender.com")]  # set your Render URL here
+# Split ALLOWED_HOSTS env var by comma into a list
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
 
 # -------------------------------
 # API Keys & Email
