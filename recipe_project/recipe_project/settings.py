@@ -196,6 +196,12 @@ DEBUG = False
 # Split ALLOWED_HOSTS env var by comma into a list
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://django-drf-ai-powered-recipe-cooking.onrender.com",
+    "https://django-drf-ai-powered-recipe-cooking-jd67.onrender.com"
+]
+
+
 # -------------------------------
 # API Keys & Email
 # -------------------------------
@@ -266,10 +272,9 @@ WSGI_APPLICATION = 'recipe_project.wsgi.application'
 # Database
 # -------------------------------
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f"postgres://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{os.environ.get('DB_NAME')}"
-    )
+    'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
 }
+
 # -------------------------------
 # Password validation
 # -------------------------------
@@ -302,8 +307,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # CORS
 # -------------------------------
 CORS_ALLOWED_ORIGINS = [
-    os.environ.get("FRONTEND_URL", "http://localhost:5173")
+    os.environ.get("FRONTEND_URL", "http://localhost:5173"),
 ]
+CORS_ALLOW_CREDENTIALS = True
+
 
 # -------------------------------
 # DRF & JWT
