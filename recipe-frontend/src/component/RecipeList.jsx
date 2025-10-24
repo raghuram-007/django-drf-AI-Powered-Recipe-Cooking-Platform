@@ -3,7 +3,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 
-const API_BASE = process.env.REACT_APP_API_URL?.replace(/\/$/, "") + "/api/auth";
+const API_BASE = `${process.env.REACT_APP_API_URL}/api/auth`;
 
 const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);
@@ -22,7 +22,7 @@ const RecipeList = () => {
     const fetchCategories = async () => {
       try {
         const res = await axios.get(`${API_BASE}/categories/`);
-        setCategories(res.data || []);
+        setCategories(res.data);
       } catch (err) {
         console.error("Failed to fetch categories:", err);
         setError("Could not load categories");
@@ -40,12 +40,13 @@ const RecipeList = () => {
           params: {
             search: search || undefined,
             categories__id: selectedCategory || undefined,
-            featured: featuredOnly || undefined,
+            featured: featuredOnly || undefined, 
             page: page,
           },
         });
 
-        const data = response?.data || [];
+        const data = response.data;
+
         if (Array.isArray(data)) {
           setRecipes(data);
           setTotalPages(1);
@@ -56,8 +57,8 @@ const RecipeList = () => {
           setRecipes([]);
           setTotalPages(1);
         }
-      } catch (err) {
-        setError("Failed to fetch recipes: " + err.message);
+      } catch (error) {
+        setError("Failed to fetch recipes: " + error.message);
         setRecipes([]);
       } finally {
         setLoading(false);
@@ -167,18 +168,21 @@ const RecipeList = () => {
             </button>
           ))}
           <button
-            onClick={() => {
-              setFeaturedOnly(!featuredOnly);
-              setPage(1);
-            }}
-            className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 ${featuredOnly
-              ? "bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] text-white shadow-lg shadow-[#FF6B35]/25"
-              : "bg-white/90 backdrop-blur-sm text-gray-700 shadow-lg border border-white/20 hover:border-[#FF6B35]/30"
-            }`}
-          >
-            Popular Recipes
-          </button>
+  onClick={() => {
+    setFeaturedOnly(!featuredOnly);
+    setPage(1);
+  }}
+  className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 ${
+    featuredOnly
+      ? "bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] text-white shadow-lg shadow-[#FF6B35]/25"
+      : "bg-white/90 backdrop-blur-sm text-gray-700 shadow-lg border border-white/20 hover:border-[#FF6B35]/30"
+  }`}
+>
+ Popular Recipes
+</button>
+
         </div>
+        
 
         {/* Recipes Grid */}
         {recipes.length === 0 ? (
@@ -200,8 +204,81 @@ const RecipeList = () => {
                 className="block group"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Card and content remain unchanged */}
-                {/* ... keep all your existing JSX here ... */}
+                {/* Fixed Height Card Container */}
+                <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group-hover:scale-105 flex flex-col h-[480px]"> {/* Fixed height */}
+
+                  {/* Recipe Image - Fixed Height */}
+                  <div className="relative h-48 flex-shrink-0 overflow-hidden"> {/* Fixed image height */}
+                    {recipe.image ? (
+                      <img
+                        src={
+                          recipe.image.startsWith("http")
+                            ? recipe.image
+                            : `http://127.0.0.1:8000${recipe.image}`
+                        }
+                        alt={recipe.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                        <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                    <div className="absolute top-4 right-4">
+                      <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg">
+                        <div className="flex items-center gap-1">
+                          <svg className="w-4 h-4 text-[#FF6B35]" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                          <span className="text-sm font-bold text-gray-700">
+                            {recipe.ratings?.length > 0
+                              ? (recipe.ratings.reduce((acc, curr) => acc + curr.stars, 0) / recipe.ratings.length).toFixed(1)
+                              : "0.0"
+                            }
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Recipe Content - Flexible Height */}
+                  <div className="p-6 flex flex-col flex-1"> {/* Takes remaining space */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-[#FF6B35] transition-colors duration-300">
+                      {recipe.title}
+                    </h3>
+
+                    <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed flex-1"> {/* Flexible description */}
+                      {recipe.description}
+                    </p>
+
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-[#FF6B35] rounded-full"></div>
+                        <span className="font-medium">By {recipe.author}</span>
+                      </div>
+                      <span>{format(new Date(recipe.created_at), "MMM dd, yyyy")}</span>
+                    </div>
+
+                    {/* Recipe Meta - Fixed at bottom */}
+                    <div className="flex items-center gap-4 pt-4 border-t border-gray-100 mt-auto"> {/* Pushes to bottom */}
+                      <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>{recipe.prep_time + recipe.cook_time} min</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span>{recipe.servings} servings</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </Link>
             ))}
           </div>
@@ -226,7 +303,7 @@ const RecipeList = () => {
               <button
                 key={i}
                 onClick={() => setPage(i + 1)}
-                disabled={i + 1 > totalPages}
+                disabled={i + 1 > totalPages} // prevent going past available pages
                 className={`px-4 py-2 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-110 ${page === i + 1
                     ? "bg-gradient-to-r from-[#FF6B35] to-[#E55A2B] text-white shadow-lg shadow-[#FF6B35]/25"
                     : "bg-white/90 backdrop-blur-sm text-gray-700 shadow-lg border border-white/20 hover:border-[#FF6B35]/30"
@@ -248,6 +325,7 @@ const RecipeList = () => {
             </button>
           </div>
         )}
+
       </div>
     </div>
   );
