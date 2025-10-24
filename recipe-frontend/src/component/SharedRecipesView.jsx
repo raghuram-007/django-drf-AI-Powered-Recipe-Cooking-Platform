@@ -3,13 +3,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE = `${process.env.REACT_APP_API_URL}`;
+const API_BASE = process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com";
 
 const SharedRecipesView = () => {
   const [sharedData, setSharedData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSharer, setSelectedSharer] = useState(null);
   const [markingRead, setMarkingRead] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("access");
@@ -18,49 +19,41 @@ const SharedRecipesView = () => {
   };
 
   const fetchSharedRecipes = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const response = await axios.get(`${API_BASE}/api/auth/shared-recipes/`, config);
       setSharedData(response.data);
-    } catch (error) {
-      console.error('Error fetching shared recipes:', error);
+    } catch (err) {
+      console.error('Error fetching shared recipes:', err);
+      setError('Failed to fetch shared recipes. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchSharedRecipes();
-  }, []);
-
   const markAsRead = async (shareId) => {
     setMarkingRead(shareId);
     try {
-      await axios.patch(
-        `${API_BASE}/api/auth/shared-recipes/${shareId}/read/`,
-        {},
-        config
-      );
-      // Update local state
-      setSharedData(prev => 
+      await axios.patch(`${API_BASE}/api/auth/shared-recipes/${shareId}/read/`, {}, config);
+      setSharedData(prev =>
         prev.map(sharer => ({
           ...sharer,
           shared_recipes: sharer.shared_recipes.map(recipe =>
             recipe.share_id === shareId ? { ...recipe, is_read: true } : recipe
           ),
-          unread_count: recipe.share_id === shareId ? Math.max(0, sharer.unread_count - 1) : sharer.unread_count
+          unread_count: sharer.unread_count - 1 >= 0 ? sharer.unread_count - 1 : 0,
         }))
       );
-    } catch (error) {
-      console.error('Error marking as read:', error);
+    } catch (err) {
+      console.error('Error marking as read:', err);
     } finally {
       setMarkingRead(null);
     }
   };
 
   const handleRecipeClick = (recipeId, shareId, isRead) => {
-    if (!isRead) {
-      markAsRead(shareId);
-    }
+    if (!isRead) markAsRead(shareId);
     navigate(`/recipe/${recipeId}`);
   };
 
@@ -69,10 +62,22 @@ const SharedRecipesView = () => {
     return imagePath.startsWith("http") ? imagePath : `${API_BASE}${imagePath}`;
   };
 
+  useEffect(() => {
+    fetchSharedRecipes();
+  }, []);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500 mt-10">
+        <p>{error}</p>
       </div>
     );
   }
@@ -189,7 +194,6 @@ const SharedRecipesView = () => {
                               <h3 className="font-semibold text-lg mb-3 text-gray-800 group-hover:text-purple-600 transition-colors duration-200 line-clamp-1">
                                 {recipe.recipe_title}
                               </h3>
-                              
                               <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
                                 {recipe.recipe_description}
                               </p>
