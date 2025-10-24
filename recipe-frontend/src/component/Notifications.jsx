@@ -1,4 +1,3 @@
-// src/components/Notifications.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -18,13 +17,15 @@ const Notifications = () => {
 
   const fetchNotifications = async () => {
     try {
+      const baseUrl = process.env.REACT_APP_API_URL?.replace(/\/$/, '');
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/auth/notifications/`,
+        `${baseUrl}/api/auth/notifications/`,
         config
       );
-      setNotifications(response.data);
+      setNotifications(response?.data || []);
     } catch (error) {
       console.error('Error fetching notifications:', error);
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -32,8 +33,9 @@ const Notifications = () => {
 
   const markAsRead = async (shareId) => {
     try {
+      const baseUrl = process.env.REACT_APP_API_URL?.replace(/\/$/, '');
       await axios.patch(
-        `${process.env.REACT_APP_API_URL}/api/auth/notifications/${shareId}/read/`,
+        `${baseUrl}/api/auth/notifications/${shareId}/read/`,
         {},
         config
       );
@@ -92,7 +94,7 @@ const Notifications = () => {
                     <div className="flex items-start gap-4">
                       {/* Avatar */}
                       <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                        {notification.sender.charAt(0).toUpperCase()}
+                        {notification.sender?.charAt(0).toUpperCase() || '?'}
                       </div>
                       
                       {/* Content */}
@@ -109,13 +111,13 @@ const Notifications = () => {
                               </div>
                             )}
                             <p className="text-sm text-gray-500 mt-2">
-                              {new Date(notification.shared_at).toLocaleDateString('en-US', {
+                              {notification.shared_at ? new Date(notification.shared_at).toLocaleDateString('en-US', {
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric',
                                 hour: '2-digit',
                                 minute: '2-digit'
-                              })}
+                              }) : ''}
                             </p>
                           </div>
                           

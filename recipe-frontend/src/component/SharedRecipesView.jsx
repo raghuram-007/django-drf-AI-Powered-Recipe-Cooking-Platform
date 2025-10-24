@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE = process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com";
+const API_BASE = process.env.REACT_APP_API_URL?.replace(/\/$/, "") || "https://django-drf-ai-powered-recipe-cooking.onrender.com";
 
 const SharedRecipesView = () => {
   const [sharedData, setSharedData] = useState([]);
@@ -23,7 +23,7 @@ const SharedRecipesView = () => {
     setError(null);
     try {
       const response = await axios.get(`${API_BASE}/api/auth/shared-recipes/`, config);
-      setSharedData(response.data);
+      setSharedData(response?.data || []);
     } catch (err) {
       console.error('Error fetching shared recipes:', err);
       setError('Failed to fetch shared recipes. Please try again later.');
@@ -119,7 +119,7 @@ const SharedRecipesView = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
-                            {sharer.sharer_username.charAt(0).toUpperCase()}
+                            {sharer.sharer_username?.charAt(0)?.toUpperCase()}
                           </div>
                           <div>
                             <p className="font-semibold">{sharer.sharer_username}</p>
@@ -148,7 +148,7 @@ const SharedRecipesView = () => {
                       <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
                         <div className="flex items-center space-x-4">
                           <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                            {sharer.sharer_username.charAt(0).toUpperCase()}
+                            {sharer.sharer_username?.charAt(0)?.toUpperCase()}
                           </div>
                           <div>
                             <h2 className="text-2xl font-bold text-gray-800">{sharer.sharer_username}</h2>
@@ -165,7 +165,7 @@ const SharedRecipesView = () => {
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {sharer.shared_recipes.map((recipe) => (
+                        {sharer.shared_recipes?.map((recipe) => (
                           <div
                             key={recipe.share_id}
                             className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 group cursor-pointer"

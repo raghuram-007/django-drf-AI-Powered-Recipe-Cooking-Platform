@@ -12,12 +12,21 @@ const DiscoverRecipes = () => {
     dietary: ''
   });
 
+  // Use .env base URL
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
   const discoverTrendingRecipes = async () => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem('access');
+      if (!token) {
+        alert('You must be logged in to discover trending recipes.');
+        setIsLoading(false);
+        return;
+      }
+
       const response = await axios.post(
-        'https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/ai/trending-recipes/',
+        `${BASE_URL}/api/auth/ai/trending-recipes/`,
         filters,
         {
           headers: {
@@ -29,6 +38,8 @@ const DiscoverRecipes = () => {
 
       if (response.data.success) {
         setTrendingRecipes(response.data.trending_data.trending_recipes || []);
+      } else {
+        setTrendingRecipes([]);
       }
     } catch (error) {
       console.error('Trending recipes error:', error);
@@ -41,10 +52,14 @@ const DiscoverRecipes = () => {
   const getGuidedRecipe = async (recipe) => {
     try {
       const token = localStorage.getItem('access');
-      
+      if (!token) {
+        alert('You must be logged in to get a guided recipe.');
+        return;
+      }
+
       // Call the AI recipe guide API
       const response = await axios.post(
-        'https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/ai/recipe-guide/',
+        `${BASE_URL}/api/auth/ai/recipe-guide/`,
         {
           recipe_title: recipe.title,
           recipe_instructions: recipe.description
@@ -65,6 +80,8 @@ const DiscoverRecipes = () => {
             guidedInstructions: response.data.guided_instructions
           }
         });
+      } else {
+        alert('Failed to generate cooking guide. Please try again.');
       }
       
     } catch (error) {

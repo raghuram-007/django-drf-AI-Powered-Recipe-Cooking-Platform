@@ -5,6 +5,9 @@ import FeaturedRecipes from './FeaturedRecipes';
 import CategoryBrowse from './CategoryBrowse';
 import RecipeGrid from './RecipeGrid';
 
+// Use environment variable with fallback
+const API_BASE = process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth";
+
 const Homepage = () => {
   const [featuredRecipes, setFeaturedRecipes] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -13,7 +16,7 @@ const Homepage = () => {
 
   // Fetch recipes and featured in one call
   useEffect(() => {
-    axios.get('https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/recipes/')
+    axios.get(`${API_BASE}/recipes/`)
       .then(res => {
         let recipes = [];
         // Handle paginated or plain array
@@ -31,7 +34,7 @@ const Homepage = () => {
 
   // Fetch categories
   useEffect(() => {
-    axios.get('https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/categories/')
+    axios.get(`${API_BASE}/categories/`)
       .then(res => setCategories(res.data))
       .catch(err => setError('Failed to load categories: ' + err.message));
   }, []);

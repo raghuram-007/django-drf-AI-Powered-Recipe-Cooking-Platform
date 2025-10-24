@@ -8,12 +8,12 @@ const AICookingCoach = ({ recipe }) => {
 
   const askCookingCoach = async () => {
     if (!question.trim()) return;
-    
+
     setIsLoading(true);
     try {
       const token = localStorage.getItem('access');
       const response = await axios.post(
-        '${process.env.REACT_APP_API_URL}/api/auth/ai/cooking-coach/',
+        `${process.env.REACT_APP_API_URL}/api/auth/ai/cooking-coach/`,
         {
           question: question,
           recipe_context: recipe?.title || '',
@@ -43,7 +43,7 @@ const AICookingCoach = ({ recipe }) => {
       <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
         🧑‍🍳 AI Cooking Coach
       </h3>
-      
+
       <p className="text-gray-600 mb-4">
         Stuck while cooking? Ask for help with techniques, troubleshooting, or tips!
       </p>

@@ -19,21 +19,26 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login/`, {
-        email: login.email,
-        password: login.password
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL?.replace(/\/$/, '')}/api/auth/login/`,
+        {
+          email: login.email,
+          password: login.password
+        }
+      );
 
-      // Save tokens and user email
-      localStorage.setItem('access', response.data.access);
-      localStorage.setItem('refresh', response.data.refresh);
-      localStorage.setItem('user_email', login.email);
-      localStorage.setItem('user_id', response.data.user_id);
+      // Save tokens and user info safely
+      if (response?.data) {
+        localStorage.setItem('access', response.data.access || '');
+        localStorage.setItem('refresh', response.data.refresh || '');
+        localStorage.setItem('user_email', login.email);
+        localStorage.setItem('user_id', response.data.user_id || '');
+      }
 
       // ✅ Notify Navbar to update immediately
       window.dispatchEvent(new Event("login"));
 
-      setSuccess(response.data.message || 'Login successful');
+      setSuccess(response.data?.message || 'Login successful');
       setLogin({ email: '', password: '' });
 
       // Redirect after success
@@ -42,7 +47,8 @@ const LoginForm = () => {
       }, 1000);
 
     } catch (error) {
-      setError(error.response?.data?.message || 'Login failed');
+      console.error('Login error:', error);
+      setError(error?.response?.data?.message || 'Login failed');
     }
   };
 

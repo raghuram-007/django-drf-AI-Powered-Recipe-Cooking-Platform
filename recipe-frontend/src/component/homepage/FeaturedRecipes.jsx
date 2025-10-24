@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+// Use environment variable with fallback
+const API_BASE_URL = process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com";
+
 const FeaturedRecipes = ({ recipes }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -13,6 +16,11 @@ const FeaturedRecipes = ({ recipes }) => {
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev === 0 ? recipes.length - 1 : prev - 1));
+  };
+
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    return imagePath.startsWith('http') ? imagePath : `${API_BASE_URL}${imagePath}`;
   };
 
   return (
@@ -59,7 +67,7 @@ const FeaturedRecipes = ({ recipes }) => {
                       <div className="aspect-[4/3] md:aspect-square overflow-hidden">
                         <img
                           className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                          src={recipe.image}
+                          src={getImageUrl(recipe.image)}
                           alt={recipe.title}
                           onError={(e) => {
                             e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMDAgMTMwTDE1MCAyMjBIMjUwTDIwMCAxMzBaIiBmaWxsPSIjRDREOERDIi8+CjxjaXJjbGUgY3g9IjIwMCIgY3k9IjI4MCIgcj0iMzAiIGZpbGw9IiNENERCOEMiLz4KPC9zdmc+';

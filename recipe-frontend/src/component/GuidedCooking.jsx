@@ -1,7 +1,7 @@
+// src/components/GuidedCooking.jsx
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AICookingCoach from './AICookingCoach';
-
 
 const GuidedCooking = () => {
   const location = useLocation();
@@ -25,10 +25,10 @@ const GuidedCooking = () => {
     );
   }
 
-  // Split enhanced guide into steps
+  // Split enhanced guide into steps safely
   const steps = guidedInstructions?.enhanced_guide
     ? guidedInstructions.enhanced_guide.split(/\r?\n|\.\s+/).filter(s => s.trim() !== '')
-    : [`Starting cooking guide for ${originalRecipe.title}. Follow the instructions carefully.`];
+    : [`Starting cooking guide for ${originalRecipe.title || 'this recipe'}. Follow the instructions carefully.`];
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -43,17 +43,15 @@ const GuidedCooking = () => {
             Back to Trending Recipes
           </button>
           
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">{originalRecipe.title}</h1>
-          <p className="text-gray-600 mb-4">{originalRecipe.description}</p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">{originalRecipe.title || 'Untitled Recipe'}</h1>
+          <p className="text-gray-600 mb-4">{originalRecipe.description || ''}</p>
           
           <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-            <span>⏱️ {originalRecipe.prep_time + originalRecipe.cook_time} min</span>
-            <span>📊 {originalRecipe.difficulty}</span>
+            <span>⏱️ {(originalRecipe.prep_time || 0) + (originalRecipe.cook_time || 0)} min</span>
+            <span>📊 {originalRecipe.difficulty || 'N/A'}</span>
             <span>👥 {originalRecipe.servings || 4} servings</span>
           </div>
         </div>
-
-      
 
         {/* AI Cooking Coach */}
         <div className="mb-6">
@@ -95,7 +93,7 @@ const GuidedCooking = () => {
             Key Ingredients
           </h3>
           <div className="flex flex-wrap gap-2">
-            {originalRecipe.key_ingredients?.map((ingredient, idx) => (
+            {(originalRecipe.key_ingredients || []).map((ingredient, idx) => (
               <span 
                 key={idx} 
                 className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg text-sm border border-gray-200"
@@ -107,7 +105,7 @@ const GuidedCooking = () => {
         </div>
 
         {/* Viral Tips */}
-        {originalRecipe.viral_tips && originalRecipe.viral_tips.length > 0 && (
+        {(originalRecipe.viral_tips || []).length > 0 && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6">
             <h3 className="text-xl font-semibold text-yellow-800 mb-3 flex items-center gap-2">
               <span>🔥</span>

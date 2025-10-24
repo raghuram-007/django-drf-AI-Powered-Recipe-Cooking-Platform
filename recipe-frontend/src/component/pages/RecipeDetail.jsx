@@ -26,11 +26,11 @@ const FollowButton = ({ targetUserId, targetUsername, initialIsFollowing = false
     try {
       if (isFollowing) {
         // Unfollow - using your actual backend endpoint
-        await axios.post(`https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/follows/unfollow/`, { user_id: targetUserId }, config);
+        await axios.post(`${process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com"}/api/auth/follows/unfollow/`, { user_id: targetUserId }, config);
         setIsFollowing(false);
       } else {
         // Follow - using your actual backend endpoint
-        await axios.post(`https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/follows/follow/`, { user_id: targetUserId }, config);
+        await axios.post(`${process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com"}/api/auth/follows/follow/`, { user_id: targetUserId }, config);
         setIsFollowing(true);
       }
     } catch (error) {
@@ -58,7 +58,8 @@ const FollowButton = ({ targetUserId, targetUsername, initialIsFollowing = false
   );
 };
 
-const API_BASE = "https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth";
+// Use environment variable with fallback
+const API_BASE = process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth";
 
 const RecipeDetail = () => {
   const { id } = useParams();

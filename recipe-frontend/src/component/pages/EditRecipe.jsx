@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axiosInstance from '../../api/axios.js';
+import axios from 'axios';
 
 const EditRecipe = () => {
   const { id } = useParams(); // recipe ID from URL
@@ -20,11 +20,23 @@ const EditRecipe = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
   // Fetch recipe data
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const res = await axiosInstance.get(`/user-recipes/${id}/`);
+        const token = localStorage.getItem('access');
+        if (!token) {
+          alert('You must be logged in to edit a recipe.');
+          navigate('/login');
+          return;
+        }
+
+        const res = await axios.get(`${BASE_URL}/api/auth/user-recipes/${id}/`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
         setRecipeData({
           title: res.data.title || '',
           description: res.data.description || '',
@@ -33,17 +45,17 @@ const EditRecipe = () => {
           image: res.data.image || '',
           categories: res.data.categories || [],
           featured: res.data.featured || false,
-          video: '', // always reset video input to empty (user can upload new)
+          video: '', // reset video input
         });
       } catch (err) {
-        console.error('Failed to fetch recipe:', err);
+        console.error('Failed to fetch recipe:', err.response?.data || err);
         alert('Failed to fetch recipe data.');
       } finally {
         setLoading(false);
       }
     };
     fetchRecipe();
-  }, [id]);
+  }, [id, navigate, BASE_URL]);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -64,6 +76,13 @@ const EditRecipe = () => {
     setSaving(true);
 
     try {
+      const token = localStorage.getItem('access');
+      if (!token) {
+        alert('You must be logged in to update a recipe.');
+        setSaving(false);
+        return;
+      }
+
       const formData = new FormData();
       formData.append('title', recipeData.title);
       formData.append('description', recipeData.description);
@@ -71,23 +90,23 @@ const EditRecipe = () => {
       formData.append('instruction', recipeData.instruction);
       formData.append('featured', recipeData.featured);
 
-      // Only append video if it's a File object
       if (recipeData.video instanceof File) {
         formData.append('video', recipeData.video);
       }
 
-      // Append categories if any
       if (recipeData.categories.length) {
         recipeData.categories.forEach((cat) => formData.append('categories', cat));
       }
 
-      // Only append image if it's a File object
       if (recipeData.image instanceof File) {
         formData.append('image', recipeData.image);
       }
 
-      await axiosInstance.patch(`/user-recipes/${id}/`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      await axios.patch(`${BASE_URL}/api/auth/user-recipes/${id}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       alert('Recipe updated successfully!');

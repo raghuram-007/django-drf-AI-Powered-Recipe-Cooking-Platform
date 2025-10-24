@@ -76,17 +76,14 @@ const VideoReel = ({ recipe, isActive, onLike, onComment, onShare }) => {
     setSharing(true);
     try {
       await axiosInstance.post(`/recipes/${recipe.id}/share_to_followers/`);
-      // Smooth success notification
       const successEl = document.createElement('div');
       successEl.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-2xl z-50 transform translate-x-full animate-slide-in';
       successEl.textContent = '✅ Recipe shared with followers!';
       document.body.appendChild(successEl);
-      
       setTimeout(() => {
         successEl.classList.add('animate-slide-out');
         setTimeout(() => document.body.removeChild(successEl), 300);
       }, 3000);
-      
       closeShareModal();
     } catch (error) {
       console.error("Error sharing to followers:", error);
@@ -99,25 +96,21 @@ const VideoReel = ({ recipe, isActive, onLike, onComment, onShare }) => {
   const shareToSocialMedia = (platform) => {
     const currentUrl = window.location.href;
     const text = `Check out this amazing recipe: ${recipe.title}`;
-    
     const shareUrls = {
       whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text} ${currentUrl}`)}`,
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(currentUrl)}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
     };
-    
     window.open(shareUrls[platform], "_blank", "width=600,height=400");
   };
 
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      // Smooth copy notification
       const copyEl = document.createElement('div');
       copyEl.className = 'fixed top-4 right-4 bg-blue-500 text-white px-6 py-3 rounded-xl shadow-2xl z-50 transform translate-x-full animate-slide-in';
       copyEl.textContent = '📋 Link copied to clipboard!';
       document.body.appendChild(copyEl);
-      
       setTimeout(() => {
         copyEl.classList.add('animate-slide-out');
         setTimeout(() => document.body.removeChild(copyEl), 300);
@@ -134,7 +127,6 @@ const VideoReel = ({ recipe, isActive, onLike, onComment, onShare }) => {
         ? 'opacity-100 scale-100 translate-y-0' 
         : 'opacity-0 scale-95 translate-y-4 pointer-events-none'
     }`}>
-      {/* Video Container */}
       <div className="relative w-full h-full bg-black rounded-3xl overflow-hidden shadow-2xl">
         {videoUrl ? (
           <video
@@ -157,10 +149,8 @@ const VideoReel = ({ recipe, isActive, onLike, onComment, onShare }) => {
           </div>
         )}
 
-        {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
-        {/* Top Controls */}
         <div className="absolute top-6 left-6 right-6 flex justify-between items-center">
           <button 
             onClick={() => window.history.back()}
@@ -176,26 +166,17 @@ const VideoReel = ({ recipe, isActive, onLike, onComment, onShare }) => {
               onClick={togglePlay}
               className="group bg-black/40 backdrop-blur-md text-white p-3 rounded-2xl hover:bg-black/60 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10 hover:border-white/20"
             >
-              {isPlaying ? (
-                <Pause className="w-6 h-6 transform group-hover:scale-110 transition-transform duration-300" />
-              ) : (
-                <Play className="w-6 h-6 transform group-hover:scale-110 transition-transform duration-300" />
-              )}
+              {isPlaying ? <Pause className="w-6 h-6 transform group-hover:scale-110 transition-transform duration-300" /> : <Play className="w-6 h-6 transform group-hover:scale-110 transition-transform duration-300" />}
             </button>
             <button 
               onClick={toggleMute}
               className="group bg-black/40 backdrop-blur-md text-white p-3 rounded-2xl hover:bg-black/60 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10 hover:border-white/20"
             >
-              {isMuted ? (
-                <VolumeX className="w-6 h-6 transform group-hover:scale-110 transition-transform duration-300" />
-              ) : (
-                <Volume2 className="w-6 h-6 transform group-hover:scale-110 transition-transform duration-300" />
-              )}
+              {isMuted ? <VolumeX className="w-6 h-6 transform group-hover:scale-110 transition-transform duration-300" /> : <Volume2 className="w-6 h-6 transform group-hover:scale-110 transition-transform duration-300" />}
             </button>
           </div>
         </div>
 
-        {/* Recipe Info Bottom */}
         <div className="absolute bottom-6 left-6 right-6 text-white transform transition-all duration-500 hover:translate-y-[-5px]">
           <div className="bg-black/40 backdrop-blur-lg rounded-2xl p-6 shadow-2xl border border-white/10 hover:border-white/20 transition-all duration-300">
             <h2 className="text-2xl font-bold mb-3 text-white drop-shadow-lg">{recipe.title}</h2>
@@ -215,79 +196,46 @@ const VideoReel = ({ recipe, isActive, onLike, onComment, onShare }) => {
           </div>
         </div>
 
-        {/* Right Action Buttons */}
         <div className="absolute right-6 bottom-32 flex flex-col items-center gap-5">
-          {/* Like Button */}
           <div className="group relative">
-            <button 
-              onClick={handleLike}
-              className="flex flex-col items-center p-4 bg-black/40 backdrop-blur-md rounded-2xl hover:bg-black/60 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10 hover:border-white/20"
-            >
-              <Heart 
-                size={28} 
-                className={`transition-all duration-300 ${
-                  isLiked 
-                    ? "fill-red-500 text-red-500 transform scale-110 drop-shadow-lg" 
-                    : "text-white group-hover:text-red-400"
-                }`} 
-              />
+            <button onClick={handleLike} className="flex flex-col items-center p-4 bg-black/40 backdrop-blur-md rounded-2xl hover:bg-black/60 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10 hover:border-white/20">
+              <Heart size={28} className={`transition-all duration-300 ${isLiked ? "fill-red-500 text-red-500 transform scale-110 drop-shadow-lg" : "text-white group-hover:text-red-400"}`} />
               <span className="text-white text-xs mt-2 font-medium drop-shadow-lg">{likesCount}</span>
             </button>
-            <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              {isLiked ? 'Liked' : 'Like'}
-            </div>
+            <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">{isLiked ? 'Liked' : 'Like'}</div>
           </div>
 
-          {/* Comment Button */}
           <div className="group relative">
-            <button 
-              onClick={() => setShowComments(!showComments)}
-              className="flex flex-col items-center p-4 bg-black/40 backdrop-blur-md rounded-2xl hover:bg-black/60 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10 hover:border-white/20"
-            >
+            <button onClick={() => setShowComments(!showComments)} className="flex flex-col items-center p-4 bg-black/40 backdrop-blur-md rounded-2xl hover:bg-black/60 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10 hover:border-white/20">
               <MessageCircle size={28} className="text-white group-hover:text-blue-400 transition-colors duration-300" />
               <span className="text-white text-xs mt-2 font-medium drop-shadow-lg">{recipe.comments?.length || 0}</span>
             </button>
-            <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Comment
-            </div>
+            <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">Comment</div>
           </div>
 
-          {/* Share Button */}
           <div className="group relative">
-            <button 
-              onClick={handleShareClick}
-              className="flex flex-col items-center p-4 bg-black/40 backdrop-blur-md rounded-2xl hover:bg-black/60 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10 hover:border-white/20"
-            >
+            <button onClick={handleShareClick} className="flex flex-col items-center p-4 bg-black/40 backdrop-blur-md rounded-2xl hover:bg-black/60 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10 hover:border-white/20">
               <Share size={28} className="text-white group-hover:text-green-400 transition-colors duration-300" />
               <span className="text-white text-xs mt-2 font-medium drop-shadow-lg">Share</span>
             </button>
-            <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Share
-            </div>
+            <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">Share</div>
           </div>
 
-          {/* Bookmark Button */}
           <div className="group relative">
             <button className="flex flex-col items-center p-4 bg-black/40 backdrop-blur-md rounded-2xl hover:bg-black/60 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10 hover:border-white/20">
               <Bookmark size={28} className="text-white group-hover:text-purple-400 transition-colors duration-300" />
               <span className="text-white text-xs mt-2 font-medium drop-shadow-lg">Save</span>
             </button>
-            <div className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Save
-            </div>
+            <div className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">Save</div>
           </div>
         </div>
       </div>
 
-      {/* Comments Panel */}
       {showComments && (
         <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-black/95 backdrop-blur-xl text-white p-6 rounded-t-3xl shadow-2xl border-t border-white/10 animate-slide-up">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-bold text-white">Comments 💬</h3>
-            <button 
-              onClick={() => setShowComments(false)}
-              className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover:scale-110"
-            >
+            <button onClick={() => setShowComments(false)} className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover:scale-110">
               <X size={20} />
             </button>
           </div>
@@ -297,9 +245,7 @@ const VideoReel = ({ recipe, isActive, onLike, onComment, onShare }) => {
               <div key={c.id} className="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all duration-300 border border-white/5 hover:border-white/10">
                 <div className="flex justify-between items-start mb-2">
                   <span className="font-semibold text-white">{c.user}</span>
-                  <span className="text-gray-400 text-sm">
-                    {new Date(c.created_at).toLocaleDateString()}
-                  </span>
+                  <span className="text-gray-400 text-sm">{new Date(c.created_at).toLocaleDateString()}</span>
                 </div>
                 <p className="text-gray-200 leading-relaxed">{c.content}</p>
               </div>
@@ -334,29 +280,22 @@ const VideoReel = ({ recipe, isActive, onLike, onComment, onShare }) => {
         </div>
       )}
 
-      {/* Share Modal */}
       {showShareModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-gradient-to-br from-gray-900 to-black rounded-3xl shadow-2xl border border-white/10 w-full max-w-md overflow-hidden transform animate-scale-in">
-            {/* Modal Header */}
             <div className="p-8 bg-gradient-to-r from-purple-600 to-indigo-700 text-white">
               <div className="flex justify-between items-center">
                 <div>
                   <h3 className="text-2xl font-bold mb-2">Share Recipe</h3>
                   <p className="text-purple-100 opacity-90">Spread the culinary love! 🍳</p>
                 </div>
-                <button 
-                  onClick={closeShareModal}
-                  className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover:scale-110"
-                >
+                <button onClick={closeShareModal} className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 hover:scale-110">
                   <X size={20} />
                 </button>
               </div>
             </div>
             
-            {/* Share Options */}
             <div className="p-8 space-y-6">
-              {/* Share with Followers */}
               <div className="space-y-3">
                 <h4 className="font-semibold text-gray-300 text-sm uppercase tracking-wider">Share with Followers</h4>
                 <button
@@ -373,7 +312,6 @@ const VideoReel = ({ recipe, isActive, onLike, onComment, onShare }) => {
                 </button>
               </div>
 
-              {/* Social Media Sharing */}
               <div className="space-y-3">
                 <h4 className="font-semibold text-gray-300 text-sm uppercase tracking-wider">Share on Social Media</h4>
                 <div className="grid grid-cols-2 gap-3">

@@ -1,9 +1,9 @@
 // src/components/FeedView.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Using axios directly
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE = `${process.env.REACT_APP_API_URL}`; // Inline base URL
+const API_BASE = process.env.REACT_APP_API_URL; // Correctly read from .env
 
 const FeedView = () => {
   const [recipes, setRecipes] = useState([]);
@@ -11,11 +11,21 @@ const FeedView = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Create axios instance with baseURL and headers
+  const axiosInstance = axios.create({
+    baseURL: API_BASE,
+    headers: {
+      Authorization: localStorage.getItem("access")
+        ? `Bearer ${localStorage.getItem("access")}`
+        : ""
+    },
+  });
+
   const fetchFeed = async () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get(`${API_BASE}/api/auth/feed/`);
+      const response = await axiosInstance.get('/api/auth/feed/');
       setRecipes(response.data);
     } catch (err) {
       console.error('Error fetching feed:', err);
@@ -56,7 +66,6 @@ const FeedView = () => {
         onClick={handleCardClick}
         className="relative bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 group"
       >
-        {/* Image */}
         {imageUrl && (
           <div className="overflow-hidden">
             <img
@@ -67,14 +76,12 @@ const FeedView = () => {
           </div>
         )}
 
-        {/* Shared Tooltip */}
         {isShared && (
           <div className="absolute top-2 right-2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             Shared by {recipe.shared_by}
           </div>
         )}
 
-        {/* Content */}
         <div className="p-6">
           <h3 className="font-semibold text-lg mb-3 text-gray-800 group-hover:text-blue-600 transition-colors duration-200 line-clamp-1">
             {recipe.recipe_title || recipe.title}
@@ -94,7 +101,6 @@ const FeedView = () => {
   return (
     <div className="fade-in min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">My Feed</h1>
           <button
@@ -105,14 +111,12 @@ const FeedView = () => {
           </button>
         </div>
 
-        {/* Loading */}
         {loading && (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
           </div>
         )}
 
-        {/* Error */}
         {error && !loading && (
           <div className="text-center py-8 bg-white rounded-2xl shadow-lg mb-6">
             <p className="text-red-500 text-lg">{error}</p>
@@ -125,7 +129,6 @@ const FeedView = () => {
           </div>
         )}
 
-        {/* Empty Feed */}
         {!loading && recipes.length === 0 && !error && (
           <div className="text-center py-16 bg-white rounded-2xl shadow-lg">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -137,7 +140,6 @@ const FeedView = () => {
           </div>
         )}
 
-        {/* Recipes Grid */}
         {!loading && recipes.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recipes.map(recipe => {

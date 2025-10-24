@@ -1,6 +1,18 @@
 // src/components/FollowButton.jsx
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../api/axios';
+import axios from 'axios';
+
+const API_BASE = process.env.REACT_APP_API_URL; // Use .env for base URL
+
+// Create axios instance with baseURL and Authorization header
+const axiosInstance = axios.create({
+  baseURL: API_BASE + '/api/auth', // Prefix with API path if needed
+  headers: {
+    Authorization: localStorage.getItem('access')
+      ? `Bearer ${localStorage.getItem('access')}`
+      : ''
+  },
+});
 
 const FollowButton = ({ targetUserId, targetUsername, initialIsFollowing = false }) => {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
@@ -12,16 +24,16 @@ const FollowButton = ({ targetUserId, targetUsername, initialIsFollowing = false
 
   const handleFollowToggle = async () => {
     if (loading) return;
-    
+
     setLoading(true);
     try {
       if (isFollowing) {
         // Unfollow
-        await axiosInstance.post(`/follows/unfollow/`, { user_id: targetUserId });
+        await axiosInstance.post('/follows/unfollow/', { user_id: targetUserId });
         setIsFollowing(false);
       } else {
         // Follow
-        await axiosInstance.post(`/follows/follow/`, { user_id: targetUserId });
+        await axiosInstance.post('/follows/follow/', { user_id: targetUserId });
         setIsFollowing(true);
       }
     } catch (error) {

@@ -4,6 +4,9 @@ import axiosInstance from '../../api/axios.js';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+// Use environment variable with fallback
+const API_BASE = process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth";
+
 // ----------------------- SharedRecipesView Component -----------------------
 const SharedRecipesView = () => {
   const [sharedData, setSharedData] = useState([]);
@@ -12,8 +15,6 @@ const SharedRecipesView = () => {
   const [markingRead, setMarkingRead] = useState(null);
   const navigate = useNavigate();
 
-  const API_BASE = "https://django-drf-ai-powered-recipe-cooking.onrender.com";
-
   const token = localStorage.getItem("access");
   const config = {
     headers: { Authorization: token ? `Bearer ${token}` : "" },
@@ -21,7 +22,7 @@ const SharedRecipesView = () => {
 
   const fetchSharedRecipes = async () => {
     try {
-      const response = await axios.get(`${API_BASE}/api/auth/shared-recipes/`, config);
+      const response = await axios.get(`${API_BASE}/shared-recipes/`, config);
       setSharedData(response.data);
     } catch (error) {
       console.error('Error fetching shared recipes:', error);
@@ -38,7 +39,7 @@ const SharedRecipesView = () => {
     setMarkingRead(shareId);
     try {
       await axios.patch(
-        `${API_BASE}/api/auth/shared-recipes/${shareId}/read/`,
+        `${API_BASE}/shared-recipes/${shareId}/read/`,
         {},
         config
       );
@@ -70,7 +71,7 @@ const SharedRecipesView = () => {
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
-    return imagePath.startsWith("http") ? imagePath : `${API_BASE}${imagePath}`;
+    return imagePath.startsWith("http") ? imagePath : `${process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com"}${imagePath}`;
   };
 
   if (loading) {
@@ -891,7 +892,7 @@ const CategoriesView = ({ categories, onFetch }) => {
 
   const getImageUrl = (url) => {
     if (!url) return null;
-    return url.startsWith("http") ? url : `http://localhost:8000${url}`;
+    return url.startsWith("http") ? url : `${process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com"}${url}`;
   };
 
   const handleCategoryClick = (id) => {

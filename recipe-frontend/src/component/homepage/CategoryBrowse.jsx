@@ -1,12 +1,20 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+// Use environment variable with fallback
+const API_BASE_URL = process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com";
+
 const CategoryBrowse = ({ categories }) => {
   const navigate = useNavigate();
 
   const handleCategoryClick = (id) => {
     // Navigate to category recipes page
     navigate(`/category/${id}`);
+  };
+
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    return imagePath.startsWith("http") ? imagePath : `${API_BASE_URL}${imagePath}`;
   };
 
   if (!categories || categories.length === 0) return null;
@@ -33,11 +41,7 @@ const CategoryBrowse = ({ categories }) => {
               <div className="relative w-28 h-28 mb-6 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-500 transform group-hover:scale-110">
                 {cat.cat_image ? (
                   <img
-                    src={
-                      cat.cat_image.startsWith("http")
-                        ? cat.cat_image
-                        : `https://django-drf-ai-powered-recipe-cooking.onrender.com${cat.cat_image}`
-                    }
+                    src={getImageUrl(cat.cat_image)}
                     alt={cat.name}
                     className="relative w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                   />

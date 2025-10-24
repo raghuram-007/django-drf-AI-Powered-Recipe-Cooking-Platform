@@ -1,6 +1,6 @@
 // src/components/Feed.jsx
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../api/axios';
+import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Feed = () => {
@@ -9,7 +9,17 @@ const Feed = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const API_BASE = `${process.env.REACT_APP_API_URL}`; // Inline API base URL
+  const API_BASE = process.env.REACT_APP_API_URL; // Correctly read from .env
+
+  // Create an axios instance with base URL
+  const axiosInstance = axios.create({
+    baseURL: API_BASE,
+    headers: {
+      Authorization: localStorage.getItem("access") 
+        ? `Bearer ${localStorage.getItem("access")}` 
+        : ""
+    },
+  });
 
   useEffect(() => {
     fetchFeed();
@@ -19,7 +29,7 @@ const Feed = () => {
     try {
       setLoading(true);
       setError('');
-      const response = await axiosInstance.get('/feed/');
+      const response = await axiosInstance.get('/api/auth/feed/');
       setRecipes(response.data);
     } catch (err) {
       console.error('Error fetching feed:', err);
