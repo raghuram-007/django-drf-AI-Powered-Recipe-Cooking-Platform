@@ -31,7 +31,7 @@ const Navbar = () => {
       };
       
       const response = await axios.get(
-        `https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/notifications/`,
+        `${process.env.REACT_APP_API_URL}/api/auth/notifications/`,
         config
       );
       setNotifications(response.data.filter(notif => !notif.is_read));

@@ -3,7 +3,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 
-const API_BASE = "https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth";
+const API_BASE = `${process.env.REACT_APP_API_URL}/api/auth`;
 
 const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);

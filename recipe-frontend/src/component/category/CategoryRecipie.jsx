@@ -16,7 +16,7 @@ const CategoryRecipes = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth/categories/${categoryId}/recipes/`
+          `${process.env.REACT_APP_API_URL}/api/auth/categories/${categoryId}/recipes/`
         );
         setRecipes(response.data);
       } catch (err) {

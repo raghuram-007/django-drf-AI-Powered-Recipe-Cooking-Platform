@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE = "https://django-drf-ai-powered-recipe-cooking.onrender.com";
+const API_BASE = `${process.env.REACT_APP_API_URL}`;
 
 const SharedRecipesView = () => {
   const [sharedData, setSharedData] = useState([]);
