@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+// Use environment variable with fallback
+const API_BASE = process.env.REACT_APP_API_URL || "https://django-drf-ai-powered-recipe-cooking.onrender.com/api/auth";
+
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -31,7 +34,7 @@ const Navbar = () => {
       };
       
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/auth/notifications/`,
+        `${API_BASE}/notifications/`,
         config
       );
       setNotifications(response.data.filter(notif => !notif.is_read));
